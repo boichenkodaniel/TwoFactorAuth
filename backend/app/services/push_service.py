@@ -6,8 +6,6 @@ logger = logging.getLogger(__name__)
 
 
 class PushService:
-    """Service for sending push notifications."""
-
     @classmethod
     def send_push_notification(
         cls,
@@ -16,17 +14,6 @@ class PushService:
         body: str,
         data: dict | None = None,
     ) -> bool:
-        """Send push notification via FCM.
-
-        Args:
-            token: FCM device token.
-            title: Notification title.
-            body: Notification body.
-            data: Optional data payload.
-
-        Returns:
-            True if sent successfully, False otherwise.
-        """
         try:
             FirebaseService.send_message(
                 token=token,
