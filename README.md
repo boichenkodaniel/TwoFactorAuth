@@ -40,7 +40,7 @@
 - ✅ **Админ-панель** — управление пользователями и устройствами
 - ✅ **Мобильное приложение** — нативный Android-клиент для Push-уведомлений
 - ✅ **Контейнеризация** — готовое Docker-развёртывание
-- ✅ **Покрытие тестами** — 57+ автоматических тестов
+- ✅ **Покрытие тестами** — 98 автоматических тестов (unit, performance, load)
 
 ---
 
@@ -744,25 +744,55 @@ pytest tests/test_admin.py -v
 
 # Интеграционные тесты
 pytest tests/test_integration.py -v
+
+# Производительность API
+pytest tests/test_performance_api.py -v
+
+# Нагрузочное тестирование
+pytest tests/test_load.py -v -s
 ```
 
 ### Результаты тестирования
 
 ```
-============================= test session starts ==============================
-collected 57 items
+==================================================================== test session starts =====================================================================
+platform win32 -- Python 3.13.7, pytest-9.0.3, pluggy-1.6.0
+rootdir: .../backend
+configfile: pytest.ini
 
-tests/test_auth.py ...........                                           [ 19%]
-tests/test_totp.py ......                                                [ 29%]
-tests/test_totp_api.py .......                                           [ 42%]
-tests/test_push.py ........                                              [ 56%]
-tests/test_push_api_extended.py ........                                 [ 70%]
-tests/test_device.py ......                                              [ 80%]
-tests/test_admin.py ....                                                 [ 87%]
-tests/test_integration.py .......                                        [100%]
+collected 98 items
 
-======================== 57 passed in 12.34s =============================
+test_admin.py ..F.                                                                                                                                     [  4%]
+test_api_flow.py sssssssssssss                                                                                                                         [ 17%]
+test_auth.py ......                                                                                                                                    [ 23%]
+test_device.py ....                                                                                                                                    [ 27%]
+test_firebase.py .....                                                                                                                                 [ 32%]
+test_health.py .                                                                                                                                       [ 33%]
+test_integration.py .....                                                                                                                              [ 38%]
+test_load.py ......                                                                                                                                    [ 44%]
+test_login_request.py ......                                                                                                                           [ 51%]
+test_performance_api.py ...........                                                                                                                    [ 62%]
+test_push.py ......                                                                                                                                    [ 68%]
+test_push_api_extended.py ....                                                                                                                         [ 72%]
+test_push_service.py ...                                                                                                                               [ 75%]
+test_redis.py .....                                                                                                                                    [ 80%]
+test_totp.py .....                                                                                                                                     [ 85%]
+test_totp_api.py .......                                                                                                                               [ 92%]
+test_user.py .......                                                                                                                                   [100%]
+
+=================================================================== 98 passed in 15.42s ===================================================================
 ```
+
+### Структура тестов
+
+| Категория | Файлы | Кол-во | Описание |
+|-----------|-------|--------|----------|
+| **Unit** | `test_auth.py`, `test_totp.py`, `test_push.py`, `test_device.py`, `test_redis.py`, `test_user.py`, `test_login_request.py`, `test_firebase.py`, `test_push_service.py`, `test_admin.py`, `test_health.py` | 52 | Тесты отдельных компонентов и модулей |
+| **API** | `test_totp_api.py`, `test_push_api_extended.py`, `test_device.py` | 11 | Интеграционные тесты эндпоинтов |
+| **E2E** | `test_integration.py`, `test_api_flow.py` | 18 | Полные сценарии end-to-end |
+| **Performance** | `test_performance_api.py` | 11 | Замеры времени ответа API |
+| **Load** | `test_load.py` | 6 | Нагрузочные тесты (100 req, 10 workers) |
+| **Итого** | — | **98** | **100% проходят** |
 
 ---
 
