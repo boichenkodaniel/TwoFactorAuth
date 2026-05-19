@@ -1,10 +1,3 @@
-"""Firebase Admin SDK initialization module.
-
-This module handles Firebase initialization for push notifications.
-It supports loading credentials from environment variables, a local
-`serviceAccountKey.json`, or default credentials.
-"""
-
 import json
 import os
 from pathlib import Path
@@ -14,13 +7,10 @@ from firebase_admin import credentials, messaging
 
 
 class FirebaseService:
-    """Service for Firebase Cloud Messaging operations."""
-
     _initialized = False
 
     @classmethod
     def initialize(cls) -> None:
-        """Initialize Firebase Admin SDK if not already initialized."""
         if cls._initialized:
             return
 
@@ -53,17 +43,6 @@ class FirebaseService:
         body: str,
         data: dict | None = None,
     ) -> str:
-        """Send a push notification via FCM.
-
-        Args:
-            token: FCM device token.
-            title: Notification title.
-            body: Notification body.
-            data: Optional data payload.
-
-        Returns:
-            Message ID from FCM.
-        """
         cls.initialize()
 
         message = messaging.Message(
