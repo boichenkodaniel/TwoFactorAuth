@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2FA Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #555;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .status-approved {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-denied {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .empty-message {
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        .message {
+            margin: 20px 0;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background: #e8f4ff;
+            color: #0b4f8a;
+        }
+        .action-form {
+            margin: 0;
+        }
+        .action-button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            background: #dc3545;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .action-button:hover {
+            background: #bb2d3b;
+        }
+        .token-cell {
+            max-width: 360px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>2FA Admin Panel</h1>
+
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+
+    <div class="section">
+        <h2>Registered Users</h2>
+        {% if users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>TOTP Configured</th>
+                    <th>Device Linked</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{% if user.totp_secret %}Yes{% else %}No{% endif %}</td>
+                    <td>{% if devices_by_user_id.get(user.id) %}Yes{% else %}No{% endif %}</td>
+                    <td>
+                        {% if devices_by_user_id.get(user.id) %}
+                        <form class="action-form" method="post" action="/admin/devices/{{ user.id }}/unregister">
+                            <button class="action-button" type="submit">Unregister Device</button>
+                        </form>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-message">No users registered</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Registered Devices</h2>
+        {% if devices %}
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Email</th>
+                    <th>FCM Token</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                <tr>
+                    <td>{{ device.user_id }}</td>
+                    <td>{{ device.email or "-" }}</td>
+                    <td class="token-cell">{{ device.fcm_token }}</td>
+                    <td>
+                        <form class="action-form" method="post" action="/admin/devices/{{ device.user_id }}/unregister">
+                            <button class="action-button" type="submit">Unregister Device</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-message">No devices registered</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Login Requests</h2>
+        {% if login_requests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in login_requests %}
+                <tr>
+                    <td>{{ request.request_id }}</td>
+                    <td>{{ request.user_id }}</td>
+                    <td class="status-{{ request.status }}">{{ request.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-message">No login requests</p>
+        {% endif %}
+    </div>
+</body>
+</html>

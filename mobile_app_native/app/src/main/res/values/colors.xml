@@ -1,0 +1,6 @@
+<resources>
+    <color name="seed">#175C4C</color>
+    <color name="onSeed">#FFFFFF</color>
+    <color name="surface">#F4F7F1</color>
+    <color name="onSurface">#13201C</color>
+</resources>

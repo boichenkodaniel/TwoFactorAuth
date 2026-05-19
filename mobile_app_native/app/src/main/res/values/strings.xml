@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Push 2FA</string>
+    <string name="app_subtitle">Sign in with your account to link this Android device and confirm login attempts through Firebase push notifications.</string>
+    <string name="backend_url_label">Backend URL</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="register_button">Register Device</string>
+    <string name="unregister_button">Unregister Device</string>
+    <string name="device_state_title">Device State</string>
+    <string name="linked_user_label">Linked User ID</string>
+    <string name="fcm_token_label">FCM Token</string>
+    <string name="login_request_title">Login request detected</string>
+    <string name="request_id_label">Request ID</string>
+    <string name="request_site_label">Site</string>
+    <string name="status_label">Status</string>
+    <string name="approve_button">APPROVE</string>
+    <string name="deny_button">DENY</string>
+</resources>
