@@ -1,3 +1,4 @@
+
 # Система двухфакторной аутентификации (2FA)
 
 **Двухфакторная аутентификация как сервис** — централизованное решение для обеспечения безопасности веб-приложений с поддержкой TOTP и Push-уведомлений.
@@ -321,28 +322,56 @@ FIREBASE_CREDENTIALS={"type": "service_account", "project_id": "...", ...}
 
 ## Мобильное приложение
 
-### Сборка и запуск
+### Сборка и запуск в Android Studio
 
 #### Требования
 
-- Android Studio Arctic Fox или новее
-- JDK 11+
-- Android SDK 21+
+- Android Studio Hedgehog (2023.1.1) или новее
+- JDK 17
+- Android SDK 34 (API 34)
+- Gradle 8.2.1 (загружается автоматически при сборке)
 
-#### Первый запуск
+#### Пошаговая инструкция
 
-```bash
-cd mobile_app_native
+1. **Откройте проект в Android Studio**
+   
+   Запустите Android Studio и выберите **File → Open**, затем укажите папку `mobile_app_native`.
 
-# Синхронизация Gradle
-./gradlew sync
+2. **Дождитесь Gradle Sync**
+   
+   После открытия проекта Android Studio автоматически начнёт синхронизацию Gradle. Индикатор процесса отображается в нижней правой части окна. Дождитесь завершения.
 
-# Сборка отладочной версии
-./gradlew assembleDebug
+3. **Настройте Firebase**
+   
+   - Создайте Android-приложение в Firebase Console с package name `com.example.twofa_app`
+   - Скачайте `google-services.json`
+   - Поместите файл в `mobile_app_native/app/google-services.json`
 
-# Установка на эмулятор/устройство
-adb install app/build/outputs/apk/debug/app-debug.apk
-```
+4. **Запустите эмулятор или подключите устройство**
+   
+   - **Эмулятор:** Tools → Device Manager → Create Device
+   - **Физическое устройство:** включите отладку по USB в настройках разработчика
+
+5. **Настройте URL бэкенда**
+   
+   По умолчанию приложение использует `http://10.0.2.2:8000` (для Android Emulator). При первом запуске введите нужный URL в поле **Backend URL** на экране приложения.
+   
+   Чтобы изменить значение по умолчанию перед сборкой, отредактируйте константу в файле `AppPreferences.kt`:
+   ```kotlin
+   const val DEFAULT_BACKEND_URL = "http://192.168.1.XXX:8000"
+   ```
+
+6. **Запустите приложение**
+   
+   Нажмите зелёную кнопку **Run** (▶) в панели инструментов или используйте `Shift+F10`.
+
+#### Сборка APK-файла
+
+Для получения APK-файла (например, для передачи на устройство):
+
+1. В меню выберите **Build → Generate App Bundles or APKs → Generate APKs**
+2. APK будет сохранён в `mobile_app_native/app/build/outputs/apk/debug/app-debug.apk`
+
 
 #### Настройка Backend URL
 
@@ -352,7 +381,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 val DEFAULT_BASE_URL = "http://10.0.2.2:8000"  // для Android Emulator
 ```
 
-Для физического устройства измените URL на IP вашего компьютера:
+Для физического устройства измените URL на IP вашего компьютера (это можно сделать в процессе пользования приложением):
 
 ```kotlin
 val DEFAULT_BASE_URL = "http://192.168.1.XXX:8000"

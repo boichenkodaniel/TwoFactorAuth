@@ -29,7 +29,6 @@ Thumbs.db
 *.ipr
 .firebase/
 serviceAccountKey.json
-gradle/
 .dart_tool/
 local.properties
 mobile_app_native/app/google-services.json
